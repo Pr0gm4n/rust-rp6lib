@@ -1,0 +1,17 @@
+[package]
+name = "rp6lib"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[profile.release]
+panic = "abort"
+lto = true
+
+[lib]
+name = "rp6"
+path = "src/lib.rs"
+
+[dependencies]
+avrd = "1.0.0"
+avr_delay = { git = "https://github.com/avr-rust/delay", rev = "b0c633c385af360d0d07742fcf3499f1a708ebcd" }
