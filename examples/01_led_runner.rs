@@ -16,7 +16,7 @@ pub extern "C" fn main() {
         RobotBase::set_leds(running_light);
 
         // sleep for one second
-        delay_ms(1000);
+        delay_ms(250);
 
         // shift to the left for the 'running' effect
         running_light <<= 1;
