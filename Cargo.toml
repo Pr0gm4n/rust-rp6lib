@@ -13,5 +13,7 @@ name = "rp6"
 path = "src/lib.rs"
 
 [dependencies]
+avr-config = { version = "2.0.1", features = ["cpu-frequency"] }
+avr-std-stub = "1.0.3"
+avr_delay = { git = "https://github.com/avr-rust/delay" }
 avrd = "1.0.0"
-avr_delay = { git = "https://github.com/avr-rust/delay", rev = "b0c633c385af360d0d07742fcf3499f1a708ebcd" }
