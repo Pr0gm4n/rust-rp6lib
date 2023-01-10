@@ -3,8 +3,10 @@
 
 // required to register the panic handler
 #[allow(unused_imports)]
-use rp6::*;
+use rp6::RobotBase;
 
 /// entry point for the embedded rust program
 #[no_mangle]
-pub extern "C" fn main() {}
+pub extern "C" fn main() {
+    RobotBase::init();
+}
