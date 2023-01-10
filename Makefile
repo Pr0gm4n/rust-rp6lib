@@ -2,7 +2,7 @@
 AVR_TARGET=atmega32
 export AVR_CPU_FREQUENCY_HZ=8000000
 
-CARGO_OPTS=-Z build-std=core --target $(AVR_TARGET).json --release
+CARGO_OPTS=-Z build-std=core --target avr-targets/$(AVR_TARGET).json --release
 
 # Other variables
 ELF_PATH=target/$(AVR_TARGET)/release/examples
