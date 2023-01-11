@@ -1,3 +1,4 @@
+//! Describes the registers available on the atmega32.
 #![allow(non_camel_case_types)]
 
 use super::super::{register::reg, Register};
@@ -7,6 +8,10 @@ reg!(DDRA);
 reg!(DDRB);
 reg!(DDRC);
 reg!(DDRD);
+reg!(PINA);
+reg!(PINB);
+reg!(PINC);
+reg!(PIND);
 reg!(PORTA);
 reg!(PORTB);
 reg!(PORTC);

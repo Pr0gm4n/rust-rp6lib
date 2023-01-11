@@ -2,7 +2,7 @@
 //! supports the atmega32 target, but could be extended to other avr devices.
 
 mod device;
-pub use device::{pins, registers, DataDirection, Pin, Register, RegisterBits, RegisterValue};
+pub use device::*;
 
 pub mod interrupt;
 
@@ -16,8 +16,5 @@ pub use avr_config as config;
 
 /// Convenience module grouping functions that might be worth re-exporting to other crates.
 pub mod prelude {
-    pub use super::{
-        device::{pins, registers, DataDirection, Pin, Register, RegisterBits, RegisterValue},
-        interrupt,
-    };
+    pub use super::{device::*, interrupt};
 }

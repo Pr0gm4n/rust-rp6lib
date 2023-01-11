@@ -86,3 +86,27 @@ pub trait Pin {
         Self::PIN::is_clear_raw(Self::MASK)
     }
 }
+
+/// Convenience macro to define a pin struct directly from the `DDR`, `PORT` and `PIN` `Register`s.
+/// Requires you to `use Pin;` and `use register::*;` from this module.
+///
+/// Example: To define `pin::a0` from `DDRA`, `PORTA` and `PINA` registers, use `pin!(A, a0, 0);`.
+macro_rules! pin {
+    ($pin_group: ident, $pin_name: ident, $mask_bit: expr) => {
+        // define new `pub struct` with the `Pin`'s name
+        pub struct $pin_name;
+        // impl `Pin` for the struct
+        impl Pin for $pin_name {
+            /// Data Direction Register.
+            type DDR = concat_idents!(DDR, $pin_group);
+            /// output PORT register.
+            type PORT = concat_idents!(PORT, $pin_group);
+            /// input PIN register.
+            type PIN = concat_idents!(PIN, $pin_group);
+            /// bit MASK for the corresponding pin
+            const MASK: u8 = 1 << $mask_bit;
+        }
+    };
+}
+// export macro to the crate
+pub(crate) use pin;
