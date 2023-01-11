@@ -2,13 +2,15 @@
 AVR_TARGET=atmega32
 export AVR_CPU_FREQUENCY_HZ=8000000
 
-CARGO_OPTS=-Z build-std=core --target avr-targets/$(AVR_TARGET).json --release
-
 # Other variables
+CARGO_OPTS=--release
+
 ELF_PATH=target/$(AVR_TARGET)/release/examples
 ELF_FILES=$(subst .rs,.elf,$(subst examples/,$(ELF_PATH)/,$(wildcard examples/*.rs)))
 HEX_PATH=target
 HEX_FILES=$(subst .rs,.hex,$(subst examples/,$(HEX_PATH)/,$(wildcard examples/*.rs)))
+
+ROBOTLOADER_PATH=robotloader
 
 # Target definitions
 all: hex doc
@@ -38,4 +40,7 @@ doc:
 clean:
 	@cargo clean
 
-.PHONY: all elfs hex doc clean
+robotloader: hex
+	cd $(ROBOTLOADER_PATH)/ && sudo ./robotloader_linux_x64.sh
+
+.PHONY: all elfs hex doc clean robotloader

@@ -1,0 +1,43 @@
+ver
+### DELAY
+ver
+### WAIT_FOR:WiFly
+show rssi
+get mac
+set wlan join 0
+### WAIT_FOR:AOK
+get everything
+### DELAY
+### DELAY
+### DELAY
+### DELAY
+### DELAY
+### DELAY
+set sys mask 0x21f0
+### WAIT_FOR:AOK
+set sys value 0x0
+### WAIT_FOR:AOK
+set uart raw 500000
+### WAIT_FOR:AOK
+set uart flow 0
+### WAIT_FOR:AOK
+set wlan linkmon 5
+### WAIT_FOR:AOK
+set wlan rate 8
+### WAIT_FOR:AOK
+set comm size 1024
+### WAIT_FOR:AOK
+set comm time 10
+### WAIT_FOR:AOK
+set comm remote 0
+### WAIT_FOR:AOK
+set opt deviceid RP6v2-M256-WIFI
+### WAIT_FOR:AOK
+### DELAY
+save
+### DELAY
+### DELAY
+### DELAY
+reboot
+### DELAY
+### DELAY

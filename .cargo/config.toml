@@ -1,0 +1,20 @@
+[build]
+target = "avr-targets/atmega32.json"
+
+[env]
+AVR_CPU_FREQUENCY_HZ = "8000000"
+
+[profile.dev]
+lto = true
+panic = "abort"
+
+# override optimization level for core to compline
+[profile.dev.package.core]
+opt-level = 1
+
+[profile.release]
+lto = true
+panic = "abort"
+
+[unstable]
+build-std = ["core"]
