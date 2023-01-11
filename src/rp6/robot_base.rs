@@ -1,7 +1,7 @@
 /// Struct managing all actions regarding the robot's base
 pub struct RobotBase {}
 
-use crate::avr::interrupt;
+use crate::{interrupt, port, Pin};
 
 use avrd::atmega32::*;
 
@@ -131,6 +131,43 @@ impl RobotBase {
 
     /// Set the LEDs on the `RobotBase` to the least significant 6 bits of the provided value
     pub fn set_leds(value: u8) {
+        // SL1
+        port::c4::set_output();
+        match (value >> 0) & 1 {
+            1 => port::c4::set_high(),
+            _ => port::c4::set_low(),
+        }
+        // SL2
+        port::c5::set_output();
+        match (value >> 1) & 1 {
+            1 => port::c5::set_high(),
+            _ => port::c5::set_low(),
+        }
+        // SL3
+        port::c6::set_output();
+        match (value >> 2) & 1 {
+            1 => port::c6::set_high(),
+            _ => port::c6::set_low(),
+        }
+        // SL4
+        port::b7::set_output();
+        match (value >> 3) & 1 {
+            1 => port::b7::set_high(),
+            _ => port::b7::set_low(),
+        }
+        // SL5
+        port::b1::set_output();
+        match (value >> 4) & 1 {
+            1 => port::b1::set_high(),
+            _ => port::b1::set_low(),
+        }
+        // SL6
+        port::b0::set_output();
+        match (value >> 5) & 1 {
+            1 => port::b0::set_high(),
+            _ => port::b0::set_low(),
+        }
+        /*
         unsafe {
             // reset LEDs 1-3
             *DDRC &= 0b10001111;
@@ -159,5 +196,6 @@ impl RobotBase {
             *DDRB |= led6;
             *PORTB |= led6;
         }
+        */
     }
 }
