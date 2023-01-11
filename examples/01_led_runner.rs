@@ -15,7 +15,7 @@ pub extern "C" fn main() {
         // set LEDs according to the binary number `running_light`
         RobotBase::set_leds(running_light);
 
-        // sleep for one second
+        // sleep for 250ms (= a quarter of one second)
         delay_ms(250);
 
         // shift to the left for the 'running' effect
