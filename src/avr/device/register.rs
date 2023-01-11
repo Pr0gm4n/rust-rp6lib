@@ -268,3 +268,25 @@ where
         }
     }
 }
+
+/// Convenience macro to define a register struct directly from avrd::<device>::* identifiers.
+/// Requires you to `use Register;` from this module and `use avrd::<your-device> as avr_device;`
+/// By default, `$addr_type` and `$reg_type` are both set to `u8`.
+macro_rules! reg {
+    ($reg_name: ident) => {
+        reg!(u8, $reg_name, u8);
+    };
+    ($addr_type: ty, $reg_name: ident, $reg_type: ty) => {
+        // define new `pub struct` with the `Register`'s name
+        pub struct $reg_name;
+        // create empty impl block
+        impl $reg_name {}
+        // impl Register for the struct
+        impl Register for $reg_name {
+            type T = $reg_type;
+            const ADDRESS: *mut $addr_type = avr_device::$reg_name as *mut $addr_type;
+        }
+    };
+}
+// export macro to the crate
+pub(crate) use reg;
