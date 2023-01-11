@@ -19,11 +19,14 @@ pub use avr_delay::{delay_ms, delay_us};
 
 // Generic AVR API based on the ruduino project.
 mod avr;
-pub use avr::*;
+pub use avr::prelude::*;
 
 // RP6-specific API based on the RP6Lib.
 mod rp6;
 pub use rp6::*;
 
-// helper to import the most common symbols at once
-pub mod prelude;
+/// Re-exports commonly-used APIs that can be imported at once.
+pub mod prelude {
+    pub use super::interrupt::without_interrupts;
+    pub use super::RobotBase;
+}
