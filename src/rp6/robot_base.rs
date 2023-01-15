@@ -1,10 +1,9 @@
-use crate::{interrupt, port::*, Pin};
+use crate::{interrupt, port::*, set_pins, Pin, Register};
 
 use avrd::atmega32::*;
 
 /// Struct managing all actions regarding the robot's base
 pub struct RobotBase {}
-
 
 impl RobotBase {
     pub fn init() {
@@ -132,71 +131,9 @@ impl RobotBase {
 
     /// Set the LEDs on the `RobotBase` to the least significant 6 bits of the provided value
     pub fn set_leds(value: u8) {
-        // SL1
-        c4::set_output();
-        match (value >> 0) & 1 {
-            1 => c4::set_high(),
-            _ => c4::set_low(),
-        }
-        // SL2
-        c5::set_output();
-        match (value >> 1) & 1 {
-            1 => c5::set_high(),
-            _ => c5::set_low(),
-        }
-        // SL3
-        c6::set_output();
-        match (value >> 2) & 1 {
-            1 => c6::set_high(),
-            _ => c6::set_low(),
-        }
-        // SL4
-        b7::set_output();
-        match (value >> 3) & 1 {
-            1 => b7::set_high(),
-            _ => b7::set_low(),
-        }
-        // SL5
-        b1::set_output();
-        match (value >> 4) & 1 {
-            1 => b1::set_high(),
-            _ => b1::set_low(),
-        }
-        // SL6
-        b0::set_output();
-        match (value >> 5) & 1 {
-            1 => b0::set_high(),
-            _ => b0::set_low(),
-        }
-        /*
-        unsafe {
-            // reset LEDs 1-3
-            *DDRC &= 0b10001111;
-            *PORTC &= 0b10001111;
-
-            // set LEDs 1-3
-            *DDRC |= (value << 4) & 0b01110000;
-            *PORTC |= (value << 4) & 0b01110000;
-
-            // reset LEDs 4-6
-            *DDRB &= 0b01111100;
-            *PORTB &= 0b01111100;
-
-            // set LED 4: PB7
-            let led4 = (value >> 3) & 1;
-            *DDRB |= led4 << 7;
-            *PORTB |= led4 << 7;
-
-            // set LED 5: PB1
-            let led5 = (value >> 4) & 1;
-            *DDRB |= led5 << 1;
-            *PORTB |= led5 << 1;
-
-            // set LED 6: PB0
-            let led6 = (value >> 5) & 1;
-            *DDRB |= led6;
-            *PORTB |= led6;
-        }
-        */
+        // set LEDs SL1-SL3
+        set_pins!([c6, c5, c4], value);
+        // set LEDs SL4-SL6
+        set_pins!([b0, b1, b7], value >> 3);
     }
 }

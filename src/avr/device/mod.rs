@@ -3,6 +3,7 @@
 
 // Do not export this module, as it should only be used within the device-specific `port` module.
 mod pin;
+pub(crate) use pin::set_pins;
 pub use pin::{DataDirection, Pin};
 
 // Do not export this module, as it should only be used within the device-specific `registers` module.
