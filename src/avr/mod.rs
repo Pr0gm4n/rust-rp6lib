@@ -16,5 +16,9 @@ pub use avr_config as config;
 
 /// Convenience module grouping functions that might be worth re-exporting to other crates.
 pub mod prelude {
-    pub use super::{device::*, interrupt};
+    pub(crate) use super::device::set_pins;
+    pub use super::{
+        device::{DataDirection, Pin, Register, RegisterBits, RegisterValue},
+        interrupt,
+    };
 }

@@ -1,6 +1,18 @@
-use crate::{interrupt, port::*, set_pins, Pin, Register};
+use crate::{avr::registers, interrupt, set_pins, Pin, Register};
 
-use avrd::atmega32::*;
+// re-export pins with device-specific function names
+mod port {
+    pub use crate::avr::port::{
+        a0 as ADC0, a1 as ADC1, a2 as LS_R, a3 as LS_L, a4 as ExternalInterrupt,
+        a5 as Motor_Current_R, a6 as Motor_Current_L, a7 as UBAT, b0 as led6, b1 as led5,
+        b2 as ACS, b3 as ACS_PwrH, b4 as PowerOn, b5 as ResetButton, b6 as ACS_L, b7 as led4,
+        c0 as SCL, c1 as SDA, c2 as Dir_L, c3 as Dir_R, c4 as led1, c5 as led2, c6 as led3,
+        c7 as ACS_R, d0 as RX, d1 as TX, d2 as Enc_L, d3 as Enc_R, d4 as Motor_L, d5 as Motor_R,
+        d6 as ACS_Pwr, d7 as IRComm,
+    };
+}
+// import pins with device-specific function names for convenience
+use port::*;
 
 /// Struct managing all actions regarding the robot's base
 pub struct RobotBase {}
@@ -84,56 +96,84 @@ impl RobotBase {
 
     /// Initializes the IO ports of the robot.
     pub fn init_ports() {
-        unsafe {
-            *PORTA = 0b00000000;
-            *PORTB = 0b00000000;
-            *PORTC = 0b00000000;
-            *PORTD = 0b00000001;
-            *DDRA = 0b00000000;
-            *DDRB = 0b01011000;
-            *DDRC = 0b10001100;
-            *DDRD = 0b11110010;
-        }
+        // init all ports to 0 (except `pd0` = RXD)
+        registers::PORTA::write(0b00000000);
+        registers::PORTB::write(0b00000000);
+        registers::PORTC::write(0b00000000);
+        registers::PORTD::write(0b00000001);
+        // init input/output directions
+        registers::DDRA::write(0b00000000);
+        registers::DDRB::write(0b01011000);
+        registers::DDRC::write(0b10001100);
+        registers::DDRD::write(0b11110010);
+    }
+
+    /// Enable power on the `RobotBase`.
+    pub fn power_on() {
+        PowerOn::set_high();
+    }
+
+    /// Disable power on the `RobotBase`.
+    pub fn power_off() {
+        PowerOn::set_low();
     }
 
     /// Enable the hardware reset button on the robot.
     pub fn enable_reset_button() {
-        unsafe {
-            *PORTB &= !(1 << 5);
-            *DDRB |= 1 << 5;
-        }
+        ResetButton::set_low();
+        ResetButton::set_input();
     }
 
     /// Disable the hardware reset button on the robot.
     pub fn disable_reset_button() {
-        unsafe {
-            *PORTB &= !(1 << 5);
-            *DDRB &= !(1 << 5);
-        }
+        ResetButton::set_low();
+        ResetButton::set_output();
     }
 
     /// Disable the IRCOMM of the robot.
     pub fn ensure_ircomm_disabled() {
-        unsafe { *PORTD &= !(1 << 7) }
+        IRComm::set_low();
     }
 
     /// Disable the ACS of the robot.
     pub fn set_acs_pwr_off() {
-        unsafe {
-            *DDRD &= !(1 << 6);
-            *PORTD &= !(1 << 6);
-            *DDRB &= !(1 << 3);
-            *PORTB &= !(1 << 3);
-            *PORTB &= !(1 << 6);
-            *PORTC &= !(1 << 7);
-        }
+        ACS_Pwr::set_input();
+        ACS_Pwr::set_low();
+        ACS_PwrH::set_input();
+        ACS_PwrH::set_low();
+        ACS_L::set_low();
+        ACS_R::set_low();
+    }
+
+    /// Set the ACS of the robot to low power.
+    pub fn set_acs_pwr_low() {
+        ACS_Pwr::set_output();
+        ACS_Pwr::set_high();
+        ACS_PwrH::set_input();
+        ACS_PwrH::set_low();
+    }
+
+    /// Set the ACS of the robot to medium power.
+    pub fn set_acs_pwr_medium() {
+        ACS_Pwr::set_input();
+        ACS_Pwr::set_low();
+        ACS_PwrH::set_output();
+        ACS_PwrH::set_high();
+    }
+
+    /// Set the ACS of the robot to high power.
+    pub fn set_acs_pwr_high() {
+        ACS_Pwr::set_output();
+        ACS_Pwr::set_high();
+        ACS_PwrH::set_output();
+        ACS_PwrH::set_high();
     }
 
     /// Set the LEDs on the `RobotBase` to the least significant 6 bits of the provided value
     pub fn set_leds(value: u8) {
         // set LEDs SL1-SL3
-        set_pins!([c6, c5, c4], value);
+        set_pins!([led3, led2, led1], value);
         // set LEDs SL4-SL6
-        set_pins!([b0, b1, b7], value >> 3);
+        set_pins!([led6, led5, led4], value >> 3);
     }
 }
