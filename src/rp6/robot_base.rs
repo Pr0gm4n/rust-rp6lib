@@ -1,9 +1,10 @@
+use crate::{interrupt, port::*, Pin};
+
+use avrd::atmega32::*;
+
 /// Struct managing all actions regarding the robot's base
 pub struct RobotBase {}
 
-use crate::{interrupt, port, Pin};
-
-use avrd::atmega32::*;
 
 impl RobotBase {
     pub fn init() {
@@ -132,40 +133,40 @@ impl RobotBase {
     /// Set the LEDs on the `RobotBase` to the least significant 6 bits of the provided value
     pub fn set_leds(value: u8) {
         // SL1
-        port::c4::set_output();
+        c4::set_output();
         match (value >> 0) & 1 {
-            1 => port::c4::set_high(),
-            _ => port::c4::set_low(),
+            1 => c4::set_high(),
+            _ => c4::set_low(),
         }
         // SL2
-        port::c5::set_output();
+        c5::set_output();
         match (value >> 1) & 1 {
-            1 => port::c5::set_high(),
-            _ => port::c5::set_low(),
+            1 => c5::set_high(),
+            _ => c5::set_low(),
         }
         // SL3
-        port::c6::set_output();
+        c6::set_output();
         match (value >> 2) & 1 {
-            1 => port::c6::set_high(),
-            _ => port::c6::set_low(),
+            1 => c6::set_high(),
+            _ => c6::set_low(),
         }
         // SL4
-        port::b7::set_output();
+        b7::set_output();
         match (value >> 3) & 1 {
-            1 => port::b7::set_high(),
-            _ => port::b7::set_low(),
+            1 => b7::set_high(),
+            _ => b7::set_low(),
         }
         // SL5
-        port::b1::set_output();
+        b1::set_output();
         match (value >> 4) & 1 {
-            1 => port::b1::set_high(),
-            _ => port::b1::set_low(),
+            1 => b1::set_high(),
+            _ => b1::set_low(),
         }
         // SL6
-        port::b0::set_output();
+        b0::set_output();
         match (value >> 5) & 1 {
-            1 => port::b0::set_high(),
-            _ => port::b0::set_low(),
+            1 => b0::set_high(),
+            _ => b0::set_low(),
         }
         /*
         unsafe {

@@ -1,4 +1,4 @@
-use crate::avr::Register;
+use super::Register;
 
 /// Represents whether a pin is an input or an output.
 pub enum DataDirection {
@@ -14,10 +14,8 @@ pub trait Pin {
     type DDR: Register<T = u8>;
     /// The associated port register.
     type PORT: Register<T = u8>;
-
-    ///
     /// Reads from the register will read input bits.
-    /// Writes to the register will toggle bits.
+    // FIXME: Writes to the register can be used to toggle bits.
     type PIN: Register<T = u8>;
     /// The mask of the pin used for accessing registers.
     const MASK: u8;
@@ -92,21 +90,44 @@ pub trait Pin {
 ///
 /// Example: To define `pin::a0` from `DDRA`, `PORTA` and `PINA` registers, use `pin!(A, a0, 0);`.
 macro_rules! pin {
-    ($pin_group: ident, $pin_name: ident, $mask_bit: expr) => {
-        // define new `pub struct` with the `Pin`'s name
-        pub struct $pin_name;
-        // impl `Pin` for the struct
-        impl Pin for $pin_name {
-            /// Data Direction Register.
-            type DDR = concat_idents!(DDR, $pin_group);
-            /// output PORT register.
-            type PORT = concat_idents!(PORT, $pin_group);
-            /// input PIN register.
-            type PIN = concat_idents!(PIN, $pin_group);
-            /// bit MASK for the corresponding pin
-            const MASK: u8 = 1 << $mask_bit;
+    ($pin_group: ident, $mask_bit: expr) => {
+        paste::paste! {
+            // define new `pub struct` with the `Pin`'s name
+            pub struct [<$pin_group:lower $mask_bit>];
+            // impl `Pin` for the struct
+            impl Pin for [<$pin_group:lower $mask_bit>] {
+                /// Data Direction Register.
+                type DDR = [<DDR $pin_group>];
+                /// output PORT register.
+                type PORT = [<PORT $pin_group>];
+                /// input PIN register.
+                type PIN = [<PIN $pin_group>];
+                /// offset of the `Pin` in the register
+                const OFFSET: u8 = $mask_bit;
+                /// bit MASK for the corresponding pin
+                const MASK: u8 = 1 << $mask_bit;
+            }
         }
     };
 }
 // export macro to the crate
 pub(crate) use pin;
+
+/// Convenience macro to define all 8 pins grouped into a single PORT group.
+/// Requires you to `use Pin;` and `use register::*;` from this module.
+///
+/// Example: To define `port::a0` through `port::a7` from `DDRA`, `PORTA` and `PINA` registers, use
+/// `port!(A);`.
+macro_rules! port {
+    ($pin_group: ident) => {
+        pin!($pin_group, 0);
+        pin!($pin_group, 1);
+        pin!($pin_group, 2);
+        pin!($pin_group, 3);
+        pin!($pin_group, 4);
+        pin!($pin_group, 5);
+        pin!($pin_group, 6);
+        pin!($pin_group, 7);
+    };
+}
+pub(crate) use port;

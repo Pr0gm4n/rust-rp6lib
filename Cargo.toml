@@ -12,3 +12,4 @@ avr-config = { version = "2.0.1", features = ["cpu-frequency"] }
 avr-std-stub = "1.0.3"
 avr_delay = { git = "https://github.com/avr-rust/delay" }
 avrd = "1.0.0"
+paste = "1.0.11"
