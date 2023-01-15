@@ -27,6 +27,8 @@ examples:
 hex: examples $(HEX_FILES)
 
 $(HEX_PATH)/%.hex: $(ELF_PATH)/%.elf
+	@echo ""
+	@avr-size --format=avr --mcu=$(AVR_TARGET) $<
 	@echo "Rebuilding $@:"
 	avr-objcopy -O ihex -R .eeprom $< $@
 	@echo ""
