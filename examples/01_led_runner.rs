@@ -11,6 +11,8 @@ pub extern "C" fn main() {
 
     let init_leds: u8 = 0b001001;
     let mut running_light: u8 = init_leds;
+
+    // main loop:
     loop {
         // set LEDs according to the binary number `running_light`
         RobotBase::set_leds(running_light);
