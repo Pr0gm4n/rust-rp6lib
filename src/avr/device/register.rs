@@ -22,7 +22,7 @@ pub trait RegisterValue:
 }
 
 /// A register.
-pub trait Register: Sized {
+pub trait Register: Default + Sized {
     /// The type that can represent the value of the register.
     type T: RegisterValue;
     /// The type representing a set of bits that may be manipulated
@@ -280,9 +280,8 @@ macro_rules! reg {
     ($(#[$attr: meta])* $reg_name: ident, $reg_type: ty) => {
         // define new `pub struct` with the `Register`'s name
         $(#[$attr])*
+        #[derive(Default)]
         pub struct $reg_name;
-        // create empty impl block
-        impl $reg_name {}
         // impl Register for the struct
         impl Register for $reg_name {
             type T = $reg_type;

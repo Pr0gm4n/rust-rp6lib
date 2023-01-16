@@ -140,8 +140,13 @@ pub(crate) use port;
 /// Example: To set `b0`, `b1` and `b7` to `0b110`, use `set_pins!(b0, b1, b7, 0b110);`.
 macro_rules! set_pins {
     ([$base_pin: ident, $($pin: ident),*], $value: expr $(,)?) => {
-        // TODO check that users have really used this macro only for pins in the same PORT group
-        //$(assert!(<$base_pin as Pin>::DDR == <$pin as Pin>::DDR);)*
+        // check that users have really used this macro only for pins in the same PORT group
+        let mut _typecheck = <$base_pin as Pin>::DDR::default();
+        $(_typecheck = <$pin as Pin>::DDR::default();)*
+        let mut _typecheck = <$base_pin as Pin>::PORT::default();
+        $(_typecheck = <$pin as Pin>::PORT::default();)*
+        let mut _typecheck = <$base_pin as Pin>::PIN::default();
+        $(_typecheck = <$pin as Pin>::PIN::default();)*
 
         // set pins as outputs
         let pin_mask = $base_pin::MASK $(| $pin::MASK)*;
