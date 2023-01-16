@@ -19,7 +19,7 @@ extern crate avr_delay;
 pub use avr_delay::{delay_ms, delay_us};
 
 // Generic AVR API based on the ruduino project.
-mod avr;
+pub mod avr;
 pub use avr::prelude::*;
 
 // RP6-specific API based on the RP6Lib.

@@ -304,3 +304,34 @@ macro_rules! reg_list {
     };
 }
 pub(crate) use reg_list;
+
+/// Convenience macro to define a bitmask as a `RegisterValue`- directly from avrd::<device>::*
+/// identifiers. Requires you to have `RegisterValue` from this module and `avrd::<your-device> as
+/// avr_device` in scope. By default, `$reg_value_type` is set to `u8`. Additionally, one can
+/// provide documentation for the `RegisterValue` inside the macro's parenthesis.
+macro_rules! bitmask {
+    ($(#[$attr: meta])* $bitmask_name: ident) => {
+        bitmask!($(#[$attr])* $bitmask_name, u8);
+    };
+    ($(#[$attr: meta])* $bitmask_name: ident, $reg_value_type: ty) => {
+        // define new `pub struct` with the `Register`'s name
+        $(#[$attr])*
+        pub const $bitmask_name: $reg_value_type = unsafe {
+            core::intrinsics::transmute::<*mut u8, usize>(avr_device::$bitmask_name) as $reg_value_type
+        };
+    };
+}
+// export macro to the crate
+pub(crate) use bitmask;
+
+/// Convenience macro to define multiple bitmasks as `RegisterValue` at once.
+/// Requires you to have `bitmask!` and `RegisterValue` from this module in scope. Additionally,
+/// one can provide documentation for each list element as usual.
+///
+/// Example: To define `INT0`, `INT1` and `INT2`, use `bitmask_list!(INT0, INT1, INT2);`.
+macro_rules! bitmask_list {
+    ($($(#[$attr: meta])* $bitmask_name: ident$(: $bitmask_type: ty)?),* $(,)?) => {
+        $(bitmask!($(#[$attr])* $bitmask_name $(, $bitmask_type)?);)*
+    };
+}
+pub(crate) use bitmask_list;
