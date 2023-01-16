@@ -26,8 +26,7 @@ pub use avr::prelude::*;
 mod rp6;
 pub use rp6::*;
 
-/// Re-exports commonly-used APIs that can be imported at once.
+/// Re-exports commonly-used API that can be imported at once.
 pub mod prelude {
-    pub use super::interrupt::without_interrupts;
-    pub use super::RobotBase;
+    pub use super::{delay_ms, delay_us, interrupt, port, RobotBase};
 }

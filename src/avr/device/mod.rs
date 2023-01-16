@@ -12,5 +12,5 @@ pub use register::{Register, RegisterBits, RegisterValue};
 
 // TODO: Consider selecting device using feature flags.
 mod atmega32;
-pub use atmega32::port;
-pub use atmega32::registers;
+/// Re-export the device's modules for port and register definitions.
+pub use atmega32::{port, registers};

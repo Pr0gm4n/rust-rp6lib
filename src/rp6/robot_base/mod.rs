@@ -1,21 +1,15 @@
+use super::Serial;
 use crate::{avr::registers, interrupt, set_pins, Pin, Register};
 
-// re-export pins with device-specific function names
-mod port {
-    pub use crate::avr::port::{
-        a0 as ADC0, a1 as ADC1, a2 as LS_R, a3 as LS_L, a4 as ExternalInterrupt,
-        a5 as Motor_Current_R, a6 as Motor_Current_L, a7 as UBAT, b0 as led6, b1 as led5,
-        b2 as ACS, b3 as ACS_PwrH, b4 as PowerOn, b5 as ResetButton, b6 as ACS_L, b7 as led4,
-        c0 as SCL, c1 as SDA, c2 as Dir_L, c3 as Dir_R, c4 as led1, c5 as led2, c6 as led3,
-        c7 as ACS_R, d0 as RX, d1 as TX, d2 as Enc_L, d3 as Enc_R, d4 as Motor_L, d5 as Motor_R,
-        d6 as ACS_Pwr, d7 as IRComm,
-    };
-}
-// import pins with device-specific function names for convenience
+/// Module binding pins to their device-specific function names.
+pub mod port;
 use port::*;
 
-/// Struct managing all actions regarding the robot's base
-pub struct RobotBase {}
+/// Module allowing for simple use of the robot's Anti-Collision System.
+mod acs;
+
+/// Struct managing all actions regarding the robot's base.
+pub struct RobotBase;
 
 impl RobotBase {
     pub fn init() {
@@ -33,17 +27,11 @@ impl RobotBase {
             Self::enable_reset_button();
 
             // Make sure that IRCOMM and ACS are turned OFF!
-            Self::ensure_ircomm_disabled();
-            Self::set_acs_pwr_off();
+            Self::disable_ircomm();
+            Self::set_acs_power_off();
 
+            Serial::init();
             /*
-            // UART:
-            UBRRH = UBRR_BAUD_LOW >> 8;	// Setup UART: Baudrate is Low Speed
-            UBRRL = (uint8_t) UBRR_BAUD_LOW;
-            UCSRA = 0x00;
-            UCSRC = (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);
-            UCSRB = (1 << TXEN) | (1 << RXEN) | (1 << RXCIE);
-
             // Initialize ADC:
             ADMUX = 0; //external reference
             ADCSRA = (0<<ADIE) | (0<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADIF);
@@ -131,49 +119,15 @@ impl RobotBase {
     }
 
     /// Disable the IRCOMM of the robot.
-    pub fn ensure_ircomm_disabled() {
+    pub fn disable_ircomm() {
         IRComm::set_low();
-    }
-
-    /// Disable the ACS of the robot.
-    pub fn set_acs_pwr_off() {
-        ACS_Pwr::set_input();
-        ACS_Pwr::set_low();
-        ACS_PwrH::set_input();
-        ACS_PwrH::set_low();
-        ACS_L::set_low();
-        ACS_R::set_low();
-    }
-
-    /// Set the ACS of the robot to low power.
-    pub fn set_acs_pwr_low() {
-        ACS_Pwr::set_output();
-        ACS_Pwr::set_high();
-        ACS_PwrH::set_input();
-        ACS_PwrH::set_low();
-    }
-
-    /// Set the ACS of the robot to medium power.
-    pub fn set_acs_pwr_medium() {
-        ACS_Pwr::set_input();
-        ACS_Pwr::set_low();
-        ACS_PwrH::set_output();
-        ACS_PwrH::set_high();
-    }
-
-    /// Set the ACS of the robot to high power.
-    pub fn set_acs_pwr_high() {
-        ACS_Pwr::set_output();
-        ACS_Pwr::set_high();
-        ACS_PwrH::set_output();
-        ACS_PwrH::set_high();
     }
 
     /// Set the LEDs on the `RobotBase` to the least significant 6 bits of the provided value
     pub fn set_leds(value: u8) {
         // set LEDs SL1-SL3
-        set_pins!([led3, led2, led1], value);
+        set_pins!([Led3, Led2, Led1], value);
         // set LEDs SL4-SL6
-        set_pins!([led6, led5, led4], value >> 3);
+        set_pins!([Led6, Led5, Led4], value >> 3);
     }
 }

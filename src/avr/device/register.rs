@@ -270,14 +270,16 @@ where
 }
 
 /// Convenience macro to define a register struct directly from avrd::<device>::* identifiers.
-/// Requires you to `use Register;` from this module and `use avrd::<your-device> as avr_device;`
-/// By default, `$reg_type` is set to `u8`.
+/// Requires you to have `Register` from this module and `use avrd::<your-device> as avr_device` in
+/// scope. By default, `$reg_type` is set to `u8`. Additionally, one can provide documentation for
+/// the `Register` struct inside the macro's parenthesis.
 macro_rules! reg {
-    ($reg_name: ident) => {
-        reg!($reg_name, u8);
+    ($(#[$attr: meta])* $reg_name: ident) => {
+        reg!($(#[$attr])* $reg_name, u8);
     };
-    ($reg_name: ident, $reg_type: ty) => {
+    ($(#[$attr: meta])* $reg_name: ident, $reg_type: ty) => {
         // define new `pub struct` with the `Register`'s name
+        $(#[$attr])*
         pub struct $reg_name;
         // create empty impl block
         impl $reg_name {}
@@ -290,3 +292,15 @@ macro_rules! reg {
 }
 // export macro to the crate
 pub(crate) use reg;
+
+/// Convenience macro to define multiple registers at once.
+/// Requires you to have `reg!` and `register::$reg_name` from this module in scope. Additionally,
+/// one can provide documentation for each list element as usual.
+///
+/// Example: To define `DDRA`, `PORTA` and `PINA`, use `reg_list!(DDRA, PORTA, PINA);`.
+macro_rules! reg_list {
+    ($($(#[$attr: meta])* $reg_name: ident),* $(,)?) => {
+        $(reg!($(#[$attr])* $reg_name);)*
+    };
+}
+pub(crate) use reg_list;
