@@ -1,4 +1,13 @@
 //! Module allowing for simple use of the robot's serial UART connection.
+use super::port::{RX, TX};
+use crate::{
+    avr::{
+        bitmasks::{RXCIE, RXEN, TXEN, UCSZ, URSEL},
+        registers::{UBRRH, UBRRL, UCSRA, UCSRB, UCSRC},
+    },
+    Pin, Register,
+};
+
 use avr_config::CPU_FREQUENCY_HZ;
 
 /// Define constants for RP6 baudrates.
@@ -15,5 +24,15 @@ impl Serial {
     pub fn write_str(_s: &'static str) {}
 
     /// Initialize the serial connection on pins `rx` and `tx`.
-    pub fn init() {}
+    pub fn init() {
+        RX::set_input();
+        TX::set_low();
+        TX::set_output();
+        // UART:
+        UBRRH::write((UBRR_BAUD_LOW >> 8) as u8); // Setup UART: Baudrate is Low Speed
+        UBRRL::write(UBRR_BAUD_LOW as u8);
+        UCSRA::write(0x00);
+        UCSRC::write(URSEL | UCSZ);
+        UCSRB::write(TXEN | RXEN | RXCIE);
+    }
 }
