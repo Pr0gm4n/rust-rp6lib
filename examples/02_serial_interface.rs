@@ -21,14 +21,14 @@ pub extern "C" fn main() {
     // main loop:
     loop {
         Serial::write_str("Counter: ");
-        //writeInteger(counter, BIN);
-        Serial::write_str("(BIN) | ");
-        //writeInteger(counter, OCT);
-        Serial::write_str("(OCT) | ");
-        //writeInteger(counter, DEC);
-        Serial::write_str("(DEC) | ");
-        //writeInteger(counter, HEX);
-        Serial::write_str("(HEX)");
+        Serial::write_u16_bin(counter);
+        Serial::write_str(" (BIN) | ");
+        Serial::write_u16_oct(counter);
+        Serial::write_str(" (OCT) | ");
+        Serial::write_u16(counter);
+        Serial::write_str(" (DEC) | ");
+        Serial::write_u16_hex(counter);
+        Serial::write_str(" (HEX)");
 
         Serial::new_line();
 
