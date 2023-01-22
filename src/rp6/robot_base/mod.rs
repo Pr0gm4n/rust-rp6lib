@@ -6,7 +6,7 @@ pub mod port;
 use port::*;
 
 /// Module allowing for simple use of the robot's Anti-Collision System.
-mod acs;
+pub mod acs;
 
 /// Struct managing all actions regarding the robot's base.
 pub struct RobotBase;

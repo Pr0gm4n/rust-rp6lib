@@ -1,7 +1,7 @@
 //! This module combines some simple device-abstraction for AVR microcontrollers. Currently only
 //! supports the atmega32 target, but could be extended to other avr devices.
 
-mod device;
+pub mod device;
 pub use device::*;
 
 pub mod interrupt;

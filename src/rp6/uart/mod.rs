@@ -122,7 +122,7 @@ impl Serial {
 #[macro_export]
 macro_rules! print {
     ($($writable: expr $(=> $format: tt)?),* $(,)?) => {
-        $(print!(@write $writable $(=> $format)?);)*
+        $($crate::print!(@write $writable $(=> $format)?);)*
     };
     (@write $writable: expr => bin) => {
         Serial::write_bin($writable);
@@ -148,7 +148,7 @@ macro_rules! print {
 #[macro_export]
 macro_rules! println {
     ($($writable: expr $(=> $format: tt)?),* $(,)?) => {
-        print!($($writable $(=> $format)?, )*);
+        $crate::print!($($writable $(=> $format)?, )*);
         Serial::new_line();
     };
 }

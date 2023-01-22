@@ -1,5 +1,5 @@
 // exporting the API of the RP6 module
-mod robot_base;
+pub mod robot_base;
 pub use robot_base::{port, RobotBase};
-mod uart;
+pub mod uart;
 pub use uart::*;

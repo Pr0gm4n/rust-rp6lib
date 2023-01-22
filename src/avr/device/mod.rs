@@ -2,7 +2,7 @@
 //! the atmega32 target, but could be extended to other avr devices.
 
 // Do not export this module, as it should only be used within the device-specific `port` module.
-mod pin;
+pub mod pin;
 pub(crate) use pin::set_pins;
 pub use pin::{DataDirection, Pin};
 
