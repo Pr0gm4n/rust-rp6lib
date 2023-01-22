@@ -22,10 +22,10 @@ pub extern "C" fn main() {
     loop {
         println!(
             "Counter:",
-            counter => bin,
-            "(BIN) |",
-            counter => oct,
-            "(OCT) |",
+            //counter => bin,
+            //"(BIN) |",
+            //counter => oct,
+            //"(OCT) |",
             counter => dec,
             "(DEC) |",
             counter => hex,

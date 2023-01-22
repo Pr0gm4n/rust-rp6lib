@@ -24,30 +24,6 @@ pub const UBRR_BAUD_LOW: u32 = (CPU_FREQUENCY_HZ / (16 * BAUD_LOW)) - 1;
 pub const BAUD_HIGH: u32 = 500000; // High speed: 500.000 Baud
 pub const UBRR_BAUD_HIGH: u32 = (CPU_FREQUENCY_HZ / (16 * BAUD_HIGH)) - 1;
 
-/*
-/// Macro that allows fixed-size formatting of any values that implement either `Display` or
-/// `Debug`. For more details, refer to `core::fmt::Write`.
-#[macro_export]
-macro_rules! format {
-    ($format_str: literal, $($arg: tt: $type: ty),* $(,)?) => {
-        format!(@build $format_str, format!(@size $format_str, $($type, )*) $(, $arg)*)
-    };
-
-    (@size $format_str: literal, $($type: ty)* $(,)?) => {
-        $format_str.len() + 8 * (0 $(+ size_of::<$type>())*)
-    };
-
-    (@build $format_str: literal, $size: expr, $($value: tt),*) => {
-        {
-            let mut buffer: String<{ $size }> = String::new();
-            write!(&mut buffer, $format_str $(, $value)*).unwrap();
-            buffer
-        }
-    };
-}
-//pub(crate) use format;
-*/
-
 /// Struct managing all access to the robot's serial port connection
 pub struct Serial;
 
@@ -103,30 +79,36 @@ impl Serial {
         value.write_to_serial();
     }
 
+    /*
     /// Write a number formatted as binary to the `Serial` connection.
     pub fn write_bin<T: SerialWritableBinary>(value: T) {
         value.write_to_serial_as_bin();
     }
+    */
 
     /// Write a number formatted as decimal to the `Serial` connection.
     pub fn write_dec<T: SerialWritableDecimal>(value: T) {
         value.write_to_serial_as_dec();
     }
 
+    /*
     /// Write a number formatted as exponential to the `Serial` connection.
     pub fn write_exp<T: SerialWritableExponential>(value: T) {
         value.write_to_serial_as_exp();
     }
+    */
 
     /// Write a number formatted as hexadecimal to the `Serial` connection.
     pub fn write_hex<T: SerialWritableHexadecimal>(value: T) {
         value.write_to_serial_as_hex();
     }
 
+    /*
     /// Write a number formatted as octal to the `Serial` connection.
     pub fn write_oct<T: SerialWritableOctal>(value: T) {
         value.write_to_serial_as_oct();
     }
+    */
 
     /// Write a `'\n'` (newline character) to the serial connection.
     pub fn new_line() {

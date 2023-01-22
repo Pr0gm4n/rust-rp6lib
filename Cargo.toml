@@ -12,5 +12,7 @@ avr-config = { version = "2.0.1", features = ["cpu-frequency"] }
 avr-std-stub = "1.0.3"
 avr_delay = { git = "https://github.com/avr-rust/delay" }
 avrd = "1.0.0"
-heapless = "0.7.16"
+heapless = { version="0.7.16", features = ["ufmt-impl"] }
 paste = "1.0.11"
+ufmt = "0.2.0"
+ufmt-write = "0.1.0"

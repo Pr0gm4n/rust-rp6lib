@@ -1,10 +1,10 @@
 use super::Serial;
 
-pub use core::{
-    fmt::{Binary, Display, LowerExp, LowerHex, Octal, Write},
-    mem::size_of,
-};
+//fmt::{Binary, Display, LowerExp, LowerHex, Octal, Write},
+pub use core::mem::size_of;
 pub use heapless::String;
+pub use ufmt::{uDisplay, uDisplayHex, uwrite};
+pub use ufmt_write::uWrite;
 
 /// Trait to allow implementing specific `Serial::write` behavior for types.
 pub trait SerialWritable {
@@ -49,7 +49,7 @@ impl SerialWritable for &str {
 }
 
 /// Trait to allow instantiation and passing as `&str` for a type.
-pub trait StringType: Write {
+pub trait StringType: uWrite {
     /// Instantiate the `StringType`.
     fn new() -> Self;
     /// Allow passing the `StringType` as `&str`.
@@ -67,13 +67,13 @@ impl<const N: usize> StringType for String<N> {
 }
 
 /// Trait to allow implementing specific `Serial::write_dec` behavior for types.
-pub trait SerialWritableDecimal: Display {
+pub trait SerialWritableDecimal: uDisplay {
     type DecimalString: StringType;
 
     /// Format the given number as decimal and write it to the `Serial` connection.
     fn write_to_serial_as_dec(&self) {
         let mut buffer = Self::DecimalString::new();
-        write!(&mut buffer, "{}", self).unwrap();
+        let _ = uwrite!(&mut buffer, "{}", *self);
         Serial::write(StringType::as_str(&buffer));
     }
 }
@@ -86,6 +86,7 @@ impl<T: SerialWritableDecimal> SerialWritable for T {
     }
 }
 
+/*
 /// Trait to allow implementing specific `Serial::write_bin` behavior for types.
 pub trait SerialWritableBinary: Binary {
     type BinaryString: StringType;
@@ -93,11 +94,13 @@ pub trait SerialWritableBinary: Binary {
     /// Format the given number as binary and write it to the `Serial` connection.
     fn write_to_serial_as_bin(&self) {
         let mut buffer = Self::BinaryString::new();
-        write!(&mut buffer, "{:b}", self).unwrap();
+        let _ = write!(&mut buffer, "{:b}", self);
         Serial::write(StringType::as_str(&buffer));
     }
 }
+*/
 
+/*
 /// Trait to allow implementing specific `Serial::write_exp` behavior for types.
 pub trait SerialWritableExponential: LowerExp {
     type ExponentialString: StringType;
@@ -105,23 +108,25 @@ pub trait SerialWritableExponential: LowerExp {
     /// Format the given number as decimal and write it to the `Serial` connection.
     fn write_to_serial_as_exp(&self) {
         let mut buffer = Self::ExponentialString::new();
-        write!(&mut buffer, "{:e}", self).unwrap();
+        let _ = write!(&mut buffer, "{:e}", self);
         Serial::write(StringType::as_str(&buffer));
     }
 }
+*/
 
 /// Trait to allow implementing specific `Serial::write_hex` behavior for types.
-pub trait SerialWritableHexadecimal: LowerHex {
+pub trait SerialWritableHexadecimal: uDisplayHex {
     type HexadecimalString: StringType;
 
     /// Format the given number as hexadecimal and write it to the `Serial` connection.
     fn write_to_serial_as_hex(&self) {
         let mut buffer = Self::HexadecimalString::new();
-        write!(&mut buffer, "{:x}", self).unwrap();
+        let _ = uwrite!(&mut buffer, "{:x}", *self);
         Serial::write(StringType::as_str(&buffer));
     }
 }
 
+/*
 /// Trait to allow implementing specific `Serial::write_oct` behavior for types.
 pub trait SerialWritableOctal: Octal {
     type OctalString: StringType;
@@ -129,10 +134,11 @@ pub trait SerialWritableOctal: Octal {
     /// Format the given number as octal and write it to the `Serial` connection.
     fn write_to_serial_as_oct(&self) {
         let mut buffer = Self::OctalString::new();
-        write!(&mut buffer, "{:o}", self).unwrap();
+        let _ = write!(&mut buffer, "{:o}", self);
         Serial::write(StringType::as_str(&buffer));
     }
 }
+*/
 
 /// Implement the traits for `Binary`, `Decimal`, `Hexadecimal` and `Octal` formatting of a number.
 macro_rules! impl_serial_writable_num {
@@ -146,10 +152,10 @@ macro_rules! impl_serial_writable_num {
     };
     // implement traits for Binary, Decimal, Hexadecimal and Octal
     ($type: ty, $size_dec: expr, $size_oct: expr $(,)?) => {
-        impl_serial_writable_num!(@impl $type, Binary, 8 * ::core::mem::size_of::<$type>());
+        //impl_serial_writable_num!(@impl $type, Binary, 8 * ::core::mem::size_of::<$type>());
         impl_serial_writable_num!(@impl $type, Decimal, $size_dec);
         impl_serial_writable_num!(@impl $type, Hexadecimal, 2 * ::core::mem::size_of::<$type>());
-        impl_serial_writable_num!(@impl $type, Octal, $size_oct);
+        //impl_serial_writable_num!(@impl $type, Octal, $size_oct);
     };
     // implement the trait `SerialWritable{$base_ident}` for `$type`.
     (@impl $type: ty, $base_name: ident, $size: expr) => {
@@ -174,6 +180,7 @@ impl_serial_writable_num!(i64);
 impl_serial_writable_num!(i128);
 impl_serial_writable_num!(isize);
 
+/*
 /// Implement the trait for `Decimal` formatting of a number.
 macro_rules! impl_serial_writable_float {
     ($type: ty, $size_in_chars: expr) => {
@@ -184,3 +191,4 @@ macro_rules! impl_serial_writable_float {
 
 impl_serial_writable_float!(f32, 100);
 impl_serial_writable_float!(f64, 100);
+*/
