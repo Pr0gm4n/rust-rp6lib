@@ -269,7 +269,7 @@ where
     }
 }
 
-/// Convenience macro to define a register struct directly from avrd::<device>::* identifiers.
+/// Convenience macro to define a register struct directly from `avrd::<device>::*` identifiers.
 /// Requires you to have `Register` from this module and `use avrd::<your-device> as avr_device` in
 /// scope. By default, `$reg_type` is set to `u8`. Additionally, one can provide documentation for
 /// the `Register` struct inside the macro's parenthesis.
@@ -304,7 +304,7 @@ macro_rules! reg_list {
 }
 pub(crate) use reg_list;
 
-/// Convenience macro to define a bitmask as a `RegisterValue`- directly from avrd::<device>::*
+/// Convenience macro to define a bitmask as a `RegisterValue`- directly from `avrd::<device>::*`
 /// identifiers. Requires you to have `RegisterValue` from this module and `avrd::<your-device> as
 /// avr_device` in scope. By default, `$reg_value_type` is set to `u8`. Additionally, one can
 /// provide documentation for the `RegisterValue` inside the macro's parenthesis.

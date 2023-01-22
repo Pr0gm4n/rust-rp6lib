@@ -67,11 +67,22 @@ impl Serial {
         TX::set_low();
         TX::set_output();
         // UART:
-        UBRRH::write((UBRR_BAUD_LOW >> 8) as u8); // Setup UART: Baudrate is Low Speed
-        UBRRL::write(UBRR_BAUD_LOW as u8);
+        Self::set_baudrate_low();
         UCSRA::write(0x00);
         UCSRC::write(URSEL | UCSZ);
         UCSRB::write(TXEN | RXEN | RXCIE);
+    }
+
+    /// Configure serial connection to low baudrate `UBRR_BAUD_LOW`.
+    pub fn set_baudrate_low() {
+        UBRRH::write((UBRR_BAUD_LOW >> 8) as u8);
+        UBRRL::write(UBRR_BAUD_LOW as u8);
+    }
+
+    /// Configure serial connection to high baudrate `UBRR_BAUD_HIGH`.
+    pub fn set_baudrate_high() {
+        UBRRH::write((UBRR_BAUD_HIGH >> 8) as u8);
+        UBRRL::write(UBRR_BAUD_HIGH as u8);
     }
 
     /// Writes a single raw byte to the `Serial` connection. Blocks until the processor is ready to
