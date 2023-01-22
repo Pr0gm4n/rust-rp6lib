@@ -20,17 +20,17 @@ pub extern "C" fn main() {
 
     // main loop:
     loop {
-        Serial::write("Counter: ");
-        Serial::write_bin(counter);
-        Serial::write(" (BIN) | ");
-        Serial::write_oct(counter);
-        Serial::write(" (OCT) | ");
-        Serial::write(counter);
-        Serial::write(" (DEC) | ");
-        Serial::write_hex(counter);
-        Serial::write(" (HEX)");
-
-        Serial::new_line();
+        println!(
+            "Counter:",
+            counter => bin,
+            "(BIN) |",
+            counter => oct,
+            "(OCT) |",
+            counter => dec,
+            "(DEC) |",
+            counter => hex,
+            "(HEX)"
+        );
 
         // increment counter
         counter += 1;

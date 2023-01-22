@@ -130,6 +130,43 @@ impl Serial {
     }
 }
 
+/// Convenience macro that allows to write multiple (formatted) `Serial::write` statements as a
+/// single call. Currently supported formatters are `bin`, `dec`, `exp`, `hex`, and `oct` for
+/// numbers.
+#[macro_export]
+macro_rules! print {
+    ($($writable: expr $(=> $format: tt)?),* $(,)?) => {
+        $(print!(@write $writable $(=> $format)?);)*
+    };
+    (@write $writable: expr => bin) => {
+        Serial::write_bin($writable);
+    };
+    (@write $writable: expr => dec) => {
+        Serial::write_dec($writable);
+    };
+    (@write $writable: expr => exp) => {
+        Serial::write_exp($writable);
+    };
+    (@write $writable: expr => hex) => {
+        Serial::write_hex($writable);
+    };
+    (@write $writable: expr => oct) => {
+        Serial::write_oct($writable);
+    };
+    (@write $writable: expr) => {
+        Serial::write($writable);
+    };
+}
+
+/// Convenience macro that allows to use the `print!` macro and append a newline character.
+#[macro_export]
+macro_rules! println {
+    ($($writable: expr $(=> $format: tt)?),* $(,)?) => {
+        print!($($writable $(=> $format)?, )*);
+        Serial::new_line();
+    };
+}
+
 /// Trait to allow implementing specific `Serial::write` behavior for types.
 pub trait SerialWritable {
     /// Takes a reference to the instance of this type and writes it to the `Serial` connection.
