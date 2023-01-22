@@ -2,4 +2,4 @@
 mod robot_base;
 pub use robot_base::{port, RobotBase};
 mod uart;
-pub use uart::Serial;
+pub use uart::*;

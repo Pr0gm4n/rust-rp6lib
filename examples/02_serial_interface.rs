@@ -13,22 +13,22 @@ pub extern "C" fn main() {
     RobotBase::set_leds(0b000000); // turn all LEDs off
 
     // write a text message to the UART:
-    Serial::write_str("\nJust a simple counter program\n\n");
+    Serial::write("\nJust a simple counter program\n\n");
 
     // define a counting variable:
     let mut counter: u16 = 0;
 
     // main loop:
     loop {
-        Serial::write_str("Counter: ");
-        Serial::write_u16_bin(counter);
-        Serial::write_str(" (BIN) | ");
-        Serial::write_u16_oct(counter);
-        Serial::write_str(" (OCT) | ");
-        Serial::write_u16(counter);
-        Serial::write_str(" (DEC) | ");
-        Serial::write_u16_hex(counter);
-        Serial::write_str(" (HEX)");
+        Serial::write("Counter: ");
+        Serial::write_bin(counter);
+        Serial::write(" (BIN) | ");
+        Serial::write_oct(counter);
+        Serial::write(" (OCT) | ");
+        Serial::write(counter);
+        Serial::write(" (DEC) | ");
+        Serial::write_hex(counter);
+        Serial::write(" (HEX)");
 
         Serial::new_line();
 

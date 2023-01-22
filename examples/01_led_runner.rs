@@ -7,7 +7,7 @@ use rp6::*;
 #[no_mangle]
 pub extern "C" fn main() {
     RobotBase::init();
-    Serial::write_str("Hello world!\n");
+    Serial::write("Hello world!\n");
 
     let init_leds: u8 = 0b001001;
     let mut running_light: u8 = init_leds;
