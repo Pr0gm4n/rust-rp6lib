@@ -59,17 +59,20 @@ fn main() -> ! {
             "(HEX)"
         );
 
+        // increment counter
+        counter += 1;
+
+        // Note: `USART_BUFFER` can only be accessed from within a `CriticalSection`
         interrupt::without_interrupts(|cs| {
             let buffer = USART_BUFFER.lock(cs);
-            println!("Ringbuffer: ");
+
+            print!("Ringbuffer: ");
             for i in 0..USART_BUFFER_SIZE {
+                // send each byte stored in the buffer as its raw value
                 Serial::write_raw(buffer.get()[i]);
             }
             Serial::new_line();
         });
-
-        // increment counter
-        counter += 1;
 
         // delay 500ms = 0.5s
         delay_ms(500);
