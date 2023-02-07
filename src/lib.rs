@@ -1,5 +1,6 @@
 #![feature(asm_experimental_arch)]
 #![feature(associated_type_defaults)]
+#![feature(cell_update)]
 #![no_std]
 //! Rust adaptation of the RP6Lib provided with the original Robby RP6 robot.
 //!

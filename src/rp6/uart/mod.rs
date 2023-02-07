@@ -6,7 +6,7 @@
 use super::port::{RX, TX};
 use crate::{
     avr::{
-        bitmasks::{RXC, RXCIE, RXEN, TXEN, UCSZ, UDRE, URSEL},
+        bitmasks::{RXC, RXCIE, RXEN, TXCIE, TXEN, UCSZ, UDRE, URSEL},
         registers::{UBRRH, UBRRL, UCSRA, UCSRB, UCSRC, UDR},
     },
     Pin, Register,
@@ -40,14 +40,28 @@ impl Serial {
         UCSRB::write(TXEN | RXEN | RXCIE);
     }
 
-    /// Enable the UART interrupts
-    pub fn enable_interrupts() {
-        UCSRB::set_mask_raw(RXCIE); // enable Interrupt again
+    /// Enable the USART_RXC interrupt
+    #[allow(non_snake_case)]
+    pub fn enable_USART_RXC_interrupt() {
+        UCSRB::set_mask_raw(RXCIE);
     }
 
-    /// Disable the UART interrupts
-    pub fn disable_interrupts() {
-        UCSRB::unset_mask_raw(RXCIE); // disable UART RX Interrupt
+    /// Enable the USART_TXC interrupt
+    #[allow(non_snake_case)]
+    pub fn enable_USART_TXC_interrupt() {
+        UCSRB::set_mask_raw(TXCIE);
+    }
+
+    /// Disable the USART_RXC interrupt
+    #[allow(non_snake_case)]
+    pub fn disable_USART_RXC_interrupt() {
+        UCSRB::unset_mask_raw(RXCIE);
+    }
+
+    /// Disable the USART_TXC interrupt
+    #[allow(non_snake_case)]
+    pub fn disable_USART_TXC_interrupt() {
+        UCSRB::unset_mask_raw(TXCIE);
     }
 
     /// Configure serial connection to low baudrate `UBRR_BAUD_LOW`.

@@ -13,8 +13,8 @@ name = "rp6"
 path = "src/lib.rs"
 
 [features]
-default = ["critical-section-count"]
-critical-section-count = []
+### See `rp6::avr::interrupt::CriticalSection` for details on this feature.
+unsafe-no-critical-section-count = []
 
 [dependencies]
 avr-config = { version = "2.0.1", features = ["cpu-frequency"] }

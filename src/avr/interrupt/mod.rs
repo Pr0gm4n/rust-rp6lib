@@ -10,13 +10,20 @@ use mutex::Mutex;
 
 /// Atomic counter of critical sections to avoid problems when `without_interrupts` is used in
 /// nested function calls.
-#[cfg(feature = "critical-section-count")]
+#[cfg(not(feature = "unsafe-no-critical-section-count"))]
 static CRITICAL_SECTION_COUNTER: Mutex<usize> = Mutex::new(0);
 
 /// Helper struct that automatically restores interrupts on drop. The wrapped `PhantomData` creates
-/// a private field to ensure that this struct cannot safely be initialized from outside of this
-/// module. Please use `without_interrupts` or `unsafe { ... }` (only if you know what you are
-/// doing!) to enter a `CriticalSection`.
+/// a private field to ensure that this struct cannot be initialized from outside of this module
+/// without using its `unsafe` initializer function `new`. The recommended use to enter a
+/// `CriticalSection` is to pass a closure to `without_interrupts`.
+///
+/// When the feature `unsafe-no-critical-section-count` is disabled, this implementation is also
+/// safe w.r.t. nested calls of `without_interrupts`. This is achieved by counting how many
+/// `CriticalSection`s were entered, and only enabling device interrupts once the last
+/// `CriticalSection` is exited. However, as these checks incur a small runtime overhead, they can
+/// be disabled with the feature `unsafe-no-critical-section-count`. Note that, for execution
+/// consistency, a user must then ensure that `without_interrupts` will never be nested!
 pub struct CriticalSection(PhantomData<()>);
 
 impl CriticalSection {
@@ -30,7 +37,7 @@ impl CriticalSection {
         let cs = CriticalSection(PhantomData);
 
         // now, in guaranteed single-threaded mode, increase number of `CriticalSection`s
-        #[cfg(feature = "critical-section-count")]
+        #[cfg(not(feature = "unsafe-no-critical-section-count"))]
         CRITICAL_SECTION_COUNTER.lock(&cs).update(|x| x + 1);
 
         cs
@@ -41,7 +48,7 @@ impl Drop for CriticalSection {
     /// Upon dropping the last `CriticalSection`, enable global device interrupts.
     #[inline(always)]
     fn drop(&mut self) {
-        #[cfg(feature = "critical-section-count")]
+        #[cfg(not(feature = "unsafe-no-critical-section-count"))]
         CRITICAL_SECTION_COUNTER.lock(&self).update(|x| {
             if x == 1 {
                 unsafe { asm!("SEI") }
@@ -49,7 +56,7 @@ impl Drop for CriticalSection {
             x - 1
         });
 
-        #[cfg(not(feature = "critical-section-count"))]
+        #[cfg(feature = "unsafe-no-critical-section-count")]
         unsafe {
             asm!("SEI")
         }
