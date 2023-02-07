@@ -1,11 +1,20 @@
 //! Routines for managing interrupts.
 //! Based on:
-//! - https://github.com/avr-rust/ruduino/blob/master/src/interrupt.rs
-//! - https://docs.rs/bare-metal/0.2.5/src/bare_metal/lib.rs.html
+//! - <https://github.com/avr-rust/ruduino/blob/master/src/interrupt.rs>
+//! - <https://docs.rs/bare-metal/0.2.5/src/bare_metal/lib.rs.html>
 
-use core::{arch::asm, marker::PhantomData};
+use core::{
+    arch::asm,
+    marker::PhantomData,
+    sync::atomic::{AtomicUsize, Ordering},
+};
 
 pub mod mutex;
+
+/// Atomic counter of critical sections to avoid problems when `without_interrupts` is used in
+/// nested function calls.
+#[cfg(feature = "critical-section-count")]
+static CRITICAL_SECTION_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 /// Helper struct that automatically restores interrupts on drop. The wrapped `PhantomData` creates
 /// a private field to ensure that this struct cannot safely be initialized from outside of this
@@ -14,17 +23,34 @@ pub mod mutex;
 pub struct CriticalSection(PhantomData<()>);
 
 impl CriticalSection {
+    /// Upon entering any `CriticalSection`, disable global device interrupts.
     #[inline(always)]
     pub unsafe fn new() -> Self {
+        // deactivate interrupts
         asm!("CLI");
+
+        // now, in guaranteed single-threaded mode, increase number of `CriticalSection`s
+        #[cfg(feature = "critical-section-count")]
+        CRITICAL_SECTION_COUNTER.fetch_add(1, Ordering::SeqCst);
+
+        // finally, enter the new `CriticalSection`
         CriticalSection(PhantomData)
     }
 }
 
 impl Drop for CriticalSection {
+    /// Upon dropping the last `CriticalSection`, enable global device interrupts.
     #[inline(always)]
     fn drop(&mut self) {
-        unsafe { asm!("SEI") }
+        #[cfg(feature = "critical-section-count")]
+        if CRITICAL_SECTION_COUNTER.fetch_sub(1, Ordering::SeqCst) <= 0 {
+            unsafe { asm!("SEI") }
+        }
+
+        #[cfg(not(feature = "critical-section-count"))]
+        unsafe {
+            asm!("SEI")
+        }
     }
 }
 
@@ -35,20 +61,18 @@ impl Drop for CriticalSection {
 #[inline(always)]
 pub fn without_interrupts<F, T>(f: F) -> T
 where
-    F: FnOnce(&CriticalSection) -> T,
+    F: FnOnce(&mut CriticalSection) -> T,
 {
     // entering a `CriticalSection` is unsafe
-    unsafe {
-        // enter a `CriticalSection`
-        let critical_section = CriticalSection::new();
+    let mut critical_section = unsafe { CriticalSection::new() };
 
-        // run the given closure with a reference to the `CriticalSection` to allow accessing a `Mutex`
-        let result = f(&critical_section);
+    // run the given closure with a unique reference to the `CriticalSection` to allow
+    // accessing a `Mutex`
+    let result = f(&mut critical_section);
 
-        // ensure that the `CriticalSection` is only left after the closure has been processed
-        drop(critical_section);
+    // explicitly ensure that the `CriticalSection` is left after the closure has been processed
+    drop(critical_section);
 
-        // return whatever the closure yielded
-        result
-    }
+    // return whatever the closure yielded
+    result
 }

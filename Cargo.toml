@@ -12,6 +12,10 @@ edition = "2021"
 name = "rp6"
 path = "src/lib.rs"
 
+[features]
+default = ["critical-section-count"]
+critical-section-count = []
+
 [dependencies]
 avr-config = { version = "2.0.1", features = ["cpu-frequency"] }
 avr-std-stub = "1.0.3"
