@@ -1,3 +1,8 @@
+[workspace]
+members = [
+    "macros",
+]
+
 [package]
 name = "rp6lib"
 version = "0.1.0"
@@ -11,6 +16,7 @@ path = "src/lib.rs"
 avr-config = { version = "2.0.1", features = ["cpu-frequency"] }
 avr-std-stub = "1.0.3"
 avr_delay = { git = "https://github.com/avr-rust/delay" }
+avr-macros = { path = "macros" }
 avrd = "1.0.0"
 heapless = { version="0.7.16", features = ["ufmt-impl"] }
 paste = "1.0.11"

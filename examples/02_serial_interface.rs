@@ -4,8 +4,8 @@
 use rp6::*;
 
 /// entry point for the embedded rust program
-#[no_mangle]
-pub extern "C" fn main() {
+#[entry]
+fn main() -> ! {
     RobotBase::init();
 
     RobotBase::set_leds(0b111111); // turn all LEDs on
@@ -35,7 +35,7 @@ pub extern "C" fn main() {
         // increment counter
         counter += 1;
 
-        // delay 200ms = 0.2s
-        delay_ms(200);
+        // delay 500ms = 0.5s
+        delay_ms(500);
     }
 }

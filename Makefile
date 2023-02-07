@@ -37,7 +37,7 @@ $(HEX_PATH)/%.hex: $(ELF_PATH)/%.elf
 
 doc:
 	@echo "Building rust docs for the $(AVR_TARGET) architecture with cargo:"
-	cargo doc $(CARGO_OPTS)
+	cargo doc $(CARGO_OPTS) --all-features --document-private-items
 
 clean:
 	@cargo clean

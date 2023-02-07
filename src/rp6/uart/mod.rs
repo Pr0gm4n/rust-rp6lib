@@ -6,7 +6,7 @@
 use super::port::{RX, TX};
 use crate::{
     avr::{
-        bitmasks::{RXCIE, RXEN, TXEN, UCSZ, UDRE, URSEL},
+        bitmasks::{RXC, RXCIE, RXEN, TXEN, UCSZ, UDRE, URSEL},
         registers::{UBRRH, UBRRL, UCSRA, UCSRB, UCSRC, UDR},
     },
     Pin, Register,
@@ -40,6 +40,16 @@ impl Serial {
         UCSRB::write(TXEN | RXEN | RXCIE);
     }
 
+    /// Enable the UART interrupts
+    pub fn enable_interrupts() {
+        UCSRB::set_mask_raw(RXCIE); // enable Interrupt again
+    }
+
+    /// Disable the UART interrupts
+    pub fn disable_interrupts() {
+        UCSRB::unset_mask_raw(RXCIE); // disable UART RX Interrupt
+    }
+
     /// Configure serial connection to low baudrate `UBRR_BAUD_LOW`.
     pub fn set_baudrate_low() {
         UBRRH::write((UBRR_BAUD_LOW >> 8) as u8);
@@ -52,10 +62,18 @@ impl Serial {
         UBRRL::write(UBRR_BAUD_HIGH as u8);
     }
 
+    /// Reads a single raw byte from the `Serial` connection. Blocks until the processor is ready
+    /// to receive the next byte, i.e., the corresponding bit `UDRE` is set in `UCSRA`.
+    #[inline(always)]
+    pub fn read_raw() -> u8 {
+        UCSRA::wait_until_mask_set_raw(RXC);
+        UDR::read()
+    }
+
     /// Writes a single raw byte to the `Serial` connection. Blocks until the processor is ready to
     /// send the next byte, i.e., the corresponding bit `UDRE` is set in `UCSRA`.
     #[inline(always)]
-    fn write_raw(b: u8) {
+    pub fn write_raw(b: u8) {
         UCSRA::wait_until_mask_set_raw(UDRE);
         UDR::write(b);
     }

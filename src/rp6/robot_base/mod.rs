@@ -18,7 +18,7 @@ impl RobotBase {
         Self::init_ports();
 
         // Disable global interrupts
-        interrupt::without_interrupts(|| {
+        interrupt::without_interrupts(|_| {
             // Make sure the Reset Button is enabled!
             // Do not disable it if you want to be able to
             // reset your robot! (Otherwise you can only

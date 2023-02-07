@@ -1,5 +1,5 @@
-#![feature(associated_type_defaults)]
 #![feature(asm_experimental_arch)]
+#![feature(associated_type_defaults)]
 #![no_std]
 //! Rust adaptation of the RP6Lib provided with the original Robby RP6 robot.
 //!
@@ -20,6 +20,9 @@ pub use avr_delay::{delay_ms, delay_us};
 // Generic AVR API based on the ruduino project.
 pub mod avr;
 pub use avr::prelude::*;
+
+// Proc-macros to define interrupts and the entry point
+pub use avr_macros::*;
 
 // RP6-specific API based on the RP6Lib.
 mod rp6;

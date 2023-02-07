@@ -4,8 +4,8 @@
 use rp6::*;
 
 /// entry point for the embedded rust program
-#[no_mangle]
-pub extern "C" fn main() {
+#[entry]
+fn main() -> ! {
     RobotBase::init();
     Serial::write("Hello world!\n");
 
