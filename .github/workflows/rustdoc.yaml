@@ -1,7 +1,12 @@
+name: Rustdoc Auto-Deploy
+
 on:
   push:
    branches:
    - main
+
+permissions:
+  contents: write
 
 env:
   CARGO_INCREMENTAL: 0
@@ -11,6 +16,7 @@ env:
 jobs:
   rustdoc:
     name: Auto-build rustdoc for the rp6lib crate and deploy to github pages
+    if: github.repository == 'Pr0gm4n/rust-rp6lib'
     runs-on: ubuntu-latest
 
     steps:
