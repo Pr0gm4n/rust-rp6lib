@@ -1,4 +1,3 @@
-name: rustdoc
 on:
   push:
    branches:
@@ -11,7 +10,7 @@ env:
 
 jobs:
   rustdoc:
-    if: github.repository == 'Pr0gm4n/rp6lib'
+    name: Auto-build rustdoc for the rp6lib crate and deploy to github pages
     runs-on: ubuntu-latest
 
     steps:
