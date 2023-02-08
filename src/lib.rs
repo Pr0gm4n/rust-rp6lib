@@ -26,8 +26,10 @@ pub use avr::prelude::*;
 pub use avr_macros::*;
 
 // RP6-specific API based on the RP6Lib.
-mod rp6;
-pub use rp6::*;
+pub mod robot_base;
+pub use robot_base::{port, RobotBase};
+pub mod uart;
+pub use uart::*;
 
 /// Re-exports commonly-used API that can be imported at once.
 pub mod prelude {

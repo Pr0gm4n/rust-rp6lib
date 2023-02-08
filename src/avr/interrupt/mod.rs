@@ -28,6 +28,15 @@ pub struct CriticalSection(PhantomData<()>);
 
 impl CriticalSection {
     /// Upon entering any `CriticalSection`, disable global device interrupts.
+    ///
+    /// # Safety
+    /// When the feature `unsafe-no-critical-section-count` is disabled, this implementation is also
+    /// safe w.r.t. nested `CriticalSection`s, e.g., by nesting calls to `without_interrupts`. This
+    /// is achieved by counting how many `CriticalSection`s were entered, and only enabling device
+    /// interrupts once the last `CriticalSection` is exited. However, as these checks incur a small
+    /// runtime overhead, they can be disabled with the feature `unsafe-no-critical-section-count`.
+    /// Note that, for execution consistency, a user must then ensure that `CriticalSection`s will
+    /// never be nested!
     #[inline(always)]
     pub unsafe fn new() -> Self {
         // first, deactivate interrupts
@@ -49,7 +58,7 @@ impl Drop for CriticalSection {
     #[inline(always)]
     fn drop(&mut self) {
         #[cfg(not(feature = "unsafe-no-critical-section-count"))]
-        CRITICAL_SECTION_COUNTER.lock(&self).update(|x| {
+        CRITICAL_SECTION_COUNTER.lock(self).update(|x| {
             if x == 1 {
                 unsafe { asm!("SEI") }
             }

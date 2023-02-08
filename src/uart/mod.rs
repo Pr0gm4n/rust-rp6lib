@@ -149,27 +149,32 @@ impl Serial {
 }
 
 /// Convenience macro that allows to write multiple (formatted) `Serial::write` statements as a
-/// single call. Currently supported formatters are `bin`, `dec`, `exp`, `hex`, and `oct` for
-/// numbers.
+/// single call. Currently supported formatters are `dec` and `hex` for numbers.
+///
+/// Example:
+/// ```rust
+/// let mut counter = 0;
+/// loop {
+///     println!(
+///         "Counter:",
+///         counter => dec,
+///         "(DEC) | ",
+///         counter => hex,
+///         "(HEX)"
+///     );
+///     counter += 1;
+/// }
+/// ```
 #[macro_export]
 macro_rules! print {
     ($($writable: expr $(=> $format: tt)?),* $(,)?) => {
         $($crate::print!(@write $writable $(=> $format)?);)*
     };
-    (@write $writable: expr => bin) => {
-        Serial::write_bin($writable);
-    };
     (@write $writable: expr => dec) => {
         Serial::write_dec($writable);
     };
-    (@write $writable: expr => exp) => {
-        Serial::write_exp($writable);
-    };
     (@write $writable: expr => hex) => {
         Serial::write_hex($writable);
-    };
-    (@write $writable: expr => oct) => {
-        Serial::write_oct($writable);
     };
     (@write $writable: expr) => {
         Serial::write($writable);

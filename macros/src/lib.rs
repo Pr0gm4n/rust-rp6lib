@@ -260,12 +260,12 @@ pub fn interrupt(
     } else {
         return syn::parse::Error::new(
             proc_macro2::Span::call_site(),
-            &format!("Interrupt `{}` unknown", ident_s),
+            format!("Interrupt `{ident_s}` unknown"),
         )
         .to_compile_error()
         .into();
     };
-    let vector = format!("__vector_{}", vect);
+    let vector = format!("__vector_{vect}");
     let vector_ident = syn::Ident::new(&vector, proc_macro2::Span::call_site());
     let vector_ident_s = vector_ident.to_string();
 
@@ -293,7 +293,7 @@ fn extract_static_muts(
     let mut seen = std::collections::HashSet::new();
     let mut statics = vec![];
     let mut stmts = vec![];
-    while let Some(stmt) = istmts.next() {
+    for stmt in istmts.by_ref() {
         match stmt {
             syn::Stmt::Item(syn::Item::Static(var)) => {
                 if var.mutability.is_some() {

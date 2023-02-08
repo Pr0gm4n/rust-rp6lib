@@ -17,16 +17,16 @@ impl SerialWritable for char {
     ///
     /// Example:
     /// ```rust
-    ///	Serial::write('R');
-    ///	Serial::write('P');
-    ///	Serial::write('6');
-    ///	Serial::write('\n'); // '\n' is a special code for the "new line" character!
-    ///	Serial::write('0'); // the ASCII character '0'
-    ///	Serial::write(48 as char); // 48 is numeric ASCII code for '0'
-    ///	Serial::write(49 as char); // '1'
-    ///	Serial::write(50 as char); // '2'
-    ///	Serial::write(51 as char); // '3'
-    ///	```
+    /// Serial::write('R');
+    /// Serial::write('P');
+    /// Serial::write('6');
+    /// Serial::write('\n'); // '\n' is a special code for the "new line" character!
+    /// Serial::write('0'); // the ASCII character '0'
+    /// Serial::write(48 as char); // 48 is numeric ASCII code for '0'
+    /// Serial::write(49 as char); // '1'
+    /// Serial::write(50 as char); // '2'
+    /// Serial::write(51 as char); // '3'
+    /// ```
     ///
     /// This example would send:
     /// ```

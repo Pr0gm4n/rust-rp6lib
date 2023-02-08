@@ -1,3 +1,5 @@
+//! Module for general interaction with the specific systems installed on the RP6's robot base.
+
 use super::Serial;
 use crate::{avr::registers, interrupt, set_pins, Pin, Register};
 

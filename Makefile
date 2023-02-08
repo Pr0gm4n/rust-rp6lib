@@ -37,7 +37,12 @@ $(HEX_PATH)/%.hex: $(ELF_PATH)/%.elf
 
 doc:
 	@echo "Building rust docs for the $(AVR_TARGET) architecture with cargo:"
-	cargo doc $(CARGO_OPTS) --all-features --document-private-items
+	cargo doc $(CARGO_OPTS) --all-features --document-private-items --no-deps
+	@echo "Updating ./docs rust docs for the $(AVR_TARGET) architecture with cargo:"
+	@rm -rf docs/
+	@cp -r target/atmega32/doc/ docs/
+	@echo "<meta http-equiv=\"refresh\" content=\"0; url=rp6\">" > docs/index.html
+
 
 clean:
 	@cargo clean

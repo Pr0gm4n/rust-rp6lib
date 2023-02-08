@@ -48,15 +48,15 @@ fn main() -> ! {
     // main loop:
     loop {
         println!(
-            "Counter:",
+            "Counter: ",
             //counter => bin,
-            //"(BIN) |",
+            //" (BIN) | ",
             //counter => oct,
-            //"(OCT) |",
+            //" (OCT) | ",
             counter => dec,
-            "(DEC) |",
+            " (DEC) | ",
             counter => hex,
-            "(HEX)"
+            " (HEX)"
         );
 
         // increment counter
