@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["ClockSource",""],["WaveformGenerationMode",""]],"struct":[["Timer16Setup",""]],"trait":[["Timer16","A 16-bit timer."]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["RXC0",""],["RXEN0",""],["TXEN0",""],["UBRR0",""],["UBRR0L",""],["UCSR0A",""],["UCSR0B",""],["UCSR0C",""],["UCSZ00",""],["UCSZ01",""],["UCSZ02",""],["UDR0",""],["UDRE0",""],["UMSEL00",""],["UMSEL01",""],["UPM00",""],["UPM01",""],["USBS0",""]],"macro":[["bit",""],["register",""]]};

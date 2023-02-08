@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"rp6":[["impl&lt;R:&nbsp;Hash + <a class=\"trait\" href=\"rp6/avr/device/register/trait.Register.html\" title=\"trait rp6::avr::device::register::Register\">Register</a>&gt; Hash for <a class=\"struct\" href=\"rp6/avr/device/register/struct.RegisterBits.html\" title=\"struct rp6::avr::device::register::RegisterBits\">RegisterBits</a>&lt;R&gt;<span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;R::<a class=\"associatedtype\" href=\"rp6/avr/device/register/trait.Register.html#associatedtype.T\" title=\"type rp6::avr::device::register::Register::T\">T</a>: Hash,</span>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

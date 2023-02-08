@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"attr":[["interrupt","Allows to define an interrupt service routine (ISR) by annotating a function with this macro. By convention, the function must be named like the handled interrupt."]],"fn":[["delay_ms","delay for N milliseconds"],["delay_us","delay for N microseconds"]]};
