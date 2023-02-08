@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["atmega32","Contains definitions for the avr target `atmega32`."],["pin",""],["register",""]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["acs","Module allowing for simple use of the robot’s Anti-Collision System."],["port","Module binding pins to their device-specific function names."]],"struct":[["RobotBase","Struct managing all actions regarding the robot’s base."]]};
