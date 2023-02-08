@@ -4,7 +4,7 @@
 #![no_std]
 //! Rust adaptation of the RP6Lib provided with the original Robby RP6 robot.
 //!
-//! Example usage (see `examples/` directory for more):
+//! Example usage (see [`examples/`](https://github.com/Pr0gm4n/rust-rp6lib/tree/main/examples) directory for more):
 //! ```no_run
 #![doc = include_str!("../examples/01_led_runner.rs")]
 //! ```
