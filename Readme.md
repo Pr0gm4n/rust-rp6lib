@@ -1,4 +1,4 @@
-[![Rustdoc Auto-Deploy](https://github.com/Pr0gm4n/rust-rp6lib/actions/workflows/rustdoc.yaml/badge.svg)](https://github.com/Pr0gm4n/rust-rp6lib/actions/workflows/rustdoc.yaml)
+[![Rustdoc Auto-Deploy](https://github.com/Pr0gm4n/rust-rp6lib/actions/workflows/rustdoc.yaml/badge.svg)](https://pr0gm4n.github.io/rust-rp6lib/rp6/)
 
 # Rust rp6lib crate
 
