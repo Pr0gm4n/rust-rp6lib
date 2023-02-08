@@ -46,6 +46,7 @@ doc-deploy:
 	@rm -rf docs/
 	@cp -r target/$(AVR_TARGET)/doc/ docs/
 	@echo "<meta http-equiv=\"refresh\" content=\"0; url=rp6\">" > docs/index.html
+	@echo "Please open these docs in [GitHub pages](https://prßgm4n.github.io/rust-rp6lib/rp6/)!" > docs/Readme.md
 
 
 clean:
