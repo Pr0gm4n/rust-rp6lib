@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["BitOrder",""],["ClockPhase",""]],"mod":[["control_register","Constants for the control register."],["status_register","Constants for the status register."]],"struct":[["Settings","SPI settings."]]};

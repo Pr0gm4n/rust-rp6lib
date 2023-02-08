@@ -27,7 +27,7 @@ jobs:
       run: rustup update --no-self-update nightly
 
     - name: Build Documentation
-      run: make doc
+      run: make doc-deploy
 
     - name: Deploy Docs
       uses: peaceiris/actions-gh-pages@v3
@@ -35,4 +35,3 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: docs
         publish_dir: ./docs
-        force_orphan: true

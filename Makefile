@@ -37,6 +37,10 @@ $(HEX_PATH)/%.hex: $(ELF_PATH)/%.elf
 
 doc:
 	@echo "Building rust docs for the $(AVR_TARGET) architecture with cargo:"
+	cargo doc $(CARGO_OPTS) --document-private-items --workspace
+
+doc-deploy:
+	@echo "Building rust docs for the $(AVR_TARGET) architecture with cargo:"
 	cargo doc $(CARGO_OPTS) --document-private-items --workspace --no-deps
 	@echo "Updating ./docs rust docs for the $(AVR_TARGET) architecture with cargo:"
 	@rm -rf docs/
@@ -50,4 +54,4 @@ clean:
 robotloader: hex
 	cd $(ROBOTLOADER_PATH)/ && sudo ./robotloader_linux_x64.sh
 
-.PHONY: all elfs hex doc clean robotloader
+.PHONY: all elfs hex doc doc-deploy clean robotloader
